@@ -27,6 +27,8 @@ host: 'localhost',
     password: '',
     database: 'sistema_educativo'
 
+    la base de datos esta configurada para que las contraseñas esten cifradas, se uso bcryptjs para eso
+
 Credenciales de prueba:
 juan.perez@alumno.cl juan123
 admin@instituto.cl admin123
