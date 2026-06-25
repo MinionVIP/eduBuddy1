@@ -55,10 +55,41 @@ CREATE TABLE nota (id_nota INT AUTO_INCREMENT PRIMARY KEY,id_estudiante INT NOT 
     UNIQUE(id_estudiante, id_evaluacion));
 
 
-CREATE TABLE apunte (id_apunte INT AUTO_INCREMENT PRIMARY KEY,id_estudiante INT NOT NULL,titulo VARCHAR(150) NOT NULL,
+CREATE TABLE apunte (id_apunte INT AUTO_INCREMENT PRIMARY KEY,id_estudiante INT NOT NULL,id_curso INT NULL,titulo VARCHAR(150) NOT NULL,
     contenido TEXT,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante));
+    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante),
+    FOREIGN KEY (id_curso) REFERENCES curso(id_curso) ON DELETE CASCADE);
+
+CREATE TABLE sub_evaluacion (
+    id_sub_evaluacion INT AUTO_INCREMENT PRIMARY KEY,
+    id_evaluacion INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    porcentaje DECIMAL(5,2) NOT NULL,
+    FOREIGN KEY (id_evaluacion) REFERENCES evaluacion(id_evaluacion) ON DELETE CASCADE
+);
+
+CREATE TABLE sub_nota (
+    id_sub_nota INT AUTO_INCREMENT PRIMARY KEY,
+    id_sub_evaluacion INT NOT NULL,
+    id_estudiante INT NOT NULL,
+    calificacion DECIMAL(3,1) NOT NULL,
+    FOREIGN KEY (id_sub_evaluacion) REFERENCES sub_evaluacion(id_sub_evaluacion) ON DELETE CASCADE,
+    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante) ON DELETE CASCADE,
+    UNIQUE(id_sub_evaluacion, id_estudiante)
+);
+
+CREATE TABLE nota_recuperacion (
+    id_nota_recuperacion INT AUTO_INCREMENT PRIMARY KEY,
+    id_evaluacion INT NOT NULL,
+    id_estudiante INT NOT NULL,
+    calificacion DECIMAL(3,1) NOT NULL,
+    fecha DATE NOT NULL,
+    FOREIGN KEY (id_evaluacion) REFERENCES evaluacion(id_evaluacion) ON DELETE CASCADE,
+    FOREIGN KEY (id_estudiante) REFERENCES estudiante(id_estudiante) ON DELETE CASCADE,
+    UNIQUE(id_evaluacion, id_estudiante)
+);
 
 CREATE TABLE usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
